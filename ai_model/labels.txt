@@ -1,0 +1,5 @@
+const labelMapping = {
+    0: 'Not Stunted',
+    1: 'Stunted',
+    2: 'Severely Stunted'
+};
