@@ -9,7 +9,7 @@ const privateKey = getKey(config.privateKey);
 
 export const createToken = (data) => {
   const accessToken = jwt.sign(
-    { id: data.id, name: data.name, email: data.email, signature: data.signature },
+    { username: data.username, email: data.email, signature: data.signature },
     privateKey,
     { algorithm: 'RS256', expiresIn: '1d' }
   );
@@ -20,7 +20,7 @@ export const createToken = (data) => {
 export const createRefreshToken = (data) => {
 
   const refreshToken = jwt.sign(
-    { id: data.id, name: data.name, email: data.email, signature: data.signature },
+    { name: data.name, email: data.email, signature: data.signature },
     privateKey,
     { algorithm: 'RS256', expiresIn: '1d' }
   );

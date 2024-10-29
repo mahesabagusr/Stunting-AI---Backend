@@ -16,7 +16,7 @@ export const userRegister = async (req, res) => {
     registerModel
   )
 
-  if (validatePayload.err) {  // Assuming wrapper.error includes an err property
+  if (validatePayload.err) {
     return wrapper.response(res, 'fail', validatePayload, 'Invalid Payload', httpError.BAD_REQUEST);
   }
 
@@ -43,7 +43,7 @@ export const userRegister = async (req, res) => {
 
 }
 
-export const userlogin = async (req, res) => {
+export const userLogin = async (req, res) => {
   const payload = { ...req.body }
 
   const validatePayload = await validator.isValidPayload(
@@ -51,7 +51,9 @@ export const userlogin = async (req, res) => {
     loginModel
   )
 
-
+  if (validatePayload.err) {
+    return wrapper.response(res, 'fail', validatePayload, 'Invalid Payload', httpError.BAD_REQUEST);
+  }
 
   const postRequest = async (payload) => {
     if (!payload) {
@@ -69,7 +71,7 @@ export const userlogin = async (req, res) => {
         'User Update Failed',
         httpError.NOT_FOUND
       )
-      : wrapper.response(res, 'success', result, 'User Update Successfull', http.OK);
+      : wrapper.response(res, 'success', result, 'User Login Successfull', http.OK);
   }
 
   response(await postRequest(validatePayload))
