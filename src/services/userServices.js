@@ -1,8 +1,10 @@
 import supabase from "../helpers/database/supabase.js"
 import * as wrapper from "../helpers/utils/wrapper.js"
-import { BadRequestError, UnauthorizedError } from "../helpers/error/index.js";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/error/index.js";
 import bcrypt from "bcrypt"
 import { nanoid } from "nanoid"
+import { createToken } from "../middlewares/jwt.js"
+import { access } from "fs";
 
 export default class User {
 
@@ -50,9 +52,33 @@ export default class User {
     }
   }
 
-  async login(paylaod) {
-    const { username, email, password } = payload
+  async login(payload) {
+    try {
+      const { username, email, password } = payload
 
-    
+      const { data: user } = await supabase
+        .from('users')
+        .select('*')
+        .or(`username.eq.${username}, email.eq.${email}`)
+
+      if (!user || user.length === 0) {
+        return wrapper.error(new NotFoundError(`Silakan Masukkan Email atau username yang benar`))
+      }
+
+      const isValid = await bcrypt.compare(password, user[0].password)
+
+
+      if (!isValid) {
+        return wrapper.error(new BadRequestError(`Harap Masukkan Password yang benar`))
+      }
+
+      const { accessToken } = await createToken(user[0])
+
+      return wrapper.data({ token: accessToken })
+
+    } catch (err) {
+
+    }
+
   }
 }
