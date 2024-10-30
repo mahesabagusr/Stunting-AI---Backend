@@ -28,6 +28,15 @@ export const createRefreshToken = (data) => {
   return { refreshToken };
 }
 
+export const decodeToken = (data) => {
+
+  const token = data.split(' ')[1];
+  const decode = jwt.verify(token, privateKey);
+
+  return decode
+
+}
+
 export const verifyToken = async (req, res, next) => {
   try {
     const { authorization } = req.headers
