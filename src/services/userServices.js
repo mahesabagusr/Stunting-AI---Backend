@@ -4,7 +4,7 @@ import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/er
 import bcrypt from "bcrypt"
 import { nanoid } from "nanoid"
 import { createToken } from "../middlewares/jwt.js"
-import { access } from "fs";
+
 
 export default class User {
 
