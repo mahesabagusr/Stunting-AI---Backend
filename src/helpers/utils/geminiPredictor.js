@@ -21,28 +21,26 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-export async function run({ ...input }) {
+export async function run({ ...input }, history = []) {
+
+  const formattedHistory = history.map(item => ({
+    role: item.role, 
+    parts: [{ text: item.content }] 
+  }));
+
+  console.log(formattedHistory);
+
   const chatSession = model.startChat({
     generationConfig,
-    history: [
-    ],
+    history: formattedHistory
   });
 
   let gender;
 
-  switch (input.gender) {
-    case true:
-      gender = "Perempuan";
-      break;
-    case false:
-      gender = "Laki-laki";
-      break;
-    default:
-      gender = "Nilai tidak valid";
-  }
+  gender = input.gender ? "Perempuan" : "Laki-laki";
 
   const message = `Jadilah seorang ahli gizi yang memberikan rekomendasi nutrisi terbaik untuk 
-  anak dengan informasi berikut: saya memiliki anak berjenis kelamin ${gender}, berstatus ${input.stuntingStatus}, 
+  anak dengan informasi berikut: saya memiliki anak dengan nama ${input.name} berjenis kelamin ${input.gender}, berstatus ${input.stuntingStatus}, 
   berusia ${input.age} tahun, dengan tinggi badan ${input.height} cm, dan berat badan ${input.weight} kg. Buatlah 
   rencana nutrisi per sekali makan yang seimbang, dengan anggaran sebesar Rp${input.budget} per makan. Rencana 
   ini harus mencakup asupan protein, karbohidrat, lemak sehat, vitamin, dan mineral yang diperlukan untuk sekali makan,
@@ -50,6 +48,7 @@ export async function run({ ...input }) {
   agar tetap sesuai kebutuhan gizi dalam anggaran yang tersedia. `
 
   const result = await chatSession.sendMessage(message);
+
   return { response: result.response.text(), prompt: message };
 }
 

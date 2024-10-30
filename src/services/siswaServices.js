@@ -7,7 +7,7 @@ import { run } from "../helpers/utils/geminiPredictor.js";
 
 export default class Siswa {
 
-  async add(payload) {
+  async addAndGenerateAi(payload) {
     const { nik, name, height, weight, parent, birthDate, gender, budget, ...dataUser } = payload
 
     const { data: id } = await supabase
@@ -36,7 +36,7 @@ export default class Siswa {
       .from('data_anak')
       .insert({
         nik: nik, name: name, height: height, weight: weight, parent: parent,
-        birth_date: birthDate, gender: gender, status_stunting: stuntingStatus
+        birth_date: birthDate, gender: gender, status_stunting: stuntingStatus, user_id: dataUser.id
       })
       .select('id')
 
@@ -44,7 +44,7 @@ export default class Siswa {
       console.error(err)
     }
 
-    const { response, prompt } = await run({ age, gender, height, weight, stuntingStatus, budget })
+    const { response, prompt } = await run({ name, age, gender, height, weight, stuntingStatus, budget })
 
     const { error: err_prompt } = await supabase
       .from('prompt')
@@ -56,5 +56,63 @@ export default class Siswa {
 
     return wrapper.data({ prompt: prompt, response: response })
 
+  }
+
+  async updateAndGenerateAI(payload) {
+    const { nik, name, height, weight, budget, ...dataUser } = payload
+
+    const { data: id } = await supabase
+      .from('users')
+      .select('id')
+      .eq('username', dataUser.username)
+
+    if (!id) {
+      return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+    }
+
+    const { data: rawDataAnak } = await supabase
+      .from('data_anak')
+      .select('*')
+      .eq('nik', nik)
+
+    const dataAnak = rawDataAnak.length > 0 ? rawDataAnak[0] : 0
+    console.log(dataAnak)
+
+    if (dataAnak === 0) {
+      return wrapper.error(new NotFoundError('NIK belum terdaftar, harap daftar terlebih dahulu'))
+    }
+
+    if (dataAnak.name != name) {
+      return wrapper.error(new NotFoundError('Nama Anak belum terdaftar, harap daftar terlebih dahulu'))
+    }
+
+    if (!dataAnak.id) {
+      return wrapper.error(new NotFoundError('Daftar Anak Tidak ada, Mohon daftar kan anak terlebih dahulu'))
+    }
+
+    const age = calculateAge(dataAnak.birth_date)
+    const stuntingStatus = await predictStuntingAi([age, dataAnak.gender, height, weight])
+
+    const { data: historyChat } = await supabase
+      .from('prompt')
+      .select('prompt,response')
+      .eq('id_anak', 10)
+
+    const conversation = historyChat ? historyChat.flatMap(item => [
+      { role: 'user', content: item.prompt },
+      { role: 'model', content: item.response }
+    ]) : [];
+
+    const { response, prompt } = await run({ name, age: age, gender: dataAnak.gender, height, weight, stuntingStatus, budget }, conversation)
+
+    const { error: err_prompt } = await supabase
+      .from('prompt')
+      .insert({ response: response, prompt: prompt, id_anak: dataAnak.id });
+
+    if (err_prompt) {
+      wrapper.error(new ExpectationFailedError('Prompt Gagal'))
+    }
+
+    return wrapper.data({ prompt: prompt, response: response })
   }
 }

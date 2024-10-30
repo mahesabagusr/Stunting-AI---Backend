@@ -1,6 +1,6 @@
 import express from 'express';
 import { userRegister, userLogin } from '../controllers/userController.js';
-import { addSiswa } from '../controllers/siswaController.js';
+import { addSiswa, updateSiswa } from '../controllers/siswaController.js';
 
 const router = express.Router();
 
@@ -13,5 +13,5 @@ router.post('/user/register', userRegister);
 router.post('/user/login', userLogin);
 
 router.post('/siswa/add', addSiswa)
-
+router.post('/siswa/update', updateSiswa);
 export default router;
