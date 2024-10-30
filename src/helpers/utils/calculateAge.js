@@ -1,17 +1,22 @@
 export function calculateAge(birthDateString) {
-  // Memisahkan hari, bulan, dan tahun dari string dengan format dd-mm-yyyy
-  const [day, month, year] = birthDateString.split('-').map(Number);
+  let birthDate;
 
-  // Membuat objek Date dengan urutan tahun, bulan, hari
-  const birthDate = new Date(year, month - 1, day);
+  // Check if the format is ISO (e.g., "yyyy-mm-ddTHH:MM:SS")
+  if (birthDateString.includes("T")) {
+    birthDate = new Date(birthDateString);
+  } else {
+    // Assume format "dd-mm-yyyy" and split accordingly
+    const [day, month, year] = birthDateString.split('-').map(Number);
+    birthDate = new Date(year, month - 1, day);
+  }
 
-  // Mendapatkan tanggal saat ini
+  // Get the current date
   const today = new Date();
 
-  // Menghitung selisih tahun
+  // Calculate the age
   let age = today.getFullYear() - birthDate.getFullYear();
 
-  // Menyesuaikan umur jika belum melewati hari ulang tahunnya tahun ini
+  // Adjust age if the birthday hasn't occurred yet this year
   const monthDifference = today.getMonth() - birthDate.getMonth();
   const dayDifference = today.getDate() - birthDate.getDate();
 
@@ -19,5 +24,6 @@ export function calculateAge(birthDateString) {
     age--;
   }
 
-  return age;
+  return age; // Return the age for further use if needed
 }
+
