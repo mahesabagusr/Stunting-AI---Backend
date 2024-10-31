@@ -116,5 +116,4 @@ export default class Siswa {
     return wrapper.data({ prompt: prompt, response: response })
   }
 
-  async
 }
