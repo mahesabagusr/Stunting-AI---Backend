@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"No test specified\"",
-    "build": "netlify-lambda build functions"
+    "test": "echo \"No test specified\""
   },
   "author": "",
   "license": "ISC",
@@ -25,7 +24,6 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
-    "netlify-lambda": "^2.0.16",
     "nodemailer": "^6.9.14",
     "nodemon": "^3.1.7",
     "onnxruntime-node": "^1.19.2",
