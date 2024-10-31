@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"No test specified\"",
-    "build": "netlify-lambda build functions"
+    "build": "netlify-lambda build functions --output functions-build"
   },
   "author": "",
   "license": "ISC",
