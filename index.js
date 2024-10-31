@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(router);
 
-const port = config.port;
+const port = config.port || 3000;
 
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
