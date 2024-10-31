@@ -1,6 +1,6 @@
 [build]
-  functions = "functions"
+  functions = "netlify/functions"
   command = "npm install && npm run build"
 
 [dev]
-  functions = "functions"
+  functions = "netlify/functions"
