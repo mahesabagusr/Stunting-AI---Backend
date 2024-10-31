@@ -6,3 +6,5 @@ mocha.txt
 lab.txt
 privateKey.pem
 publicKey.pem
+# Local Netlify folder
+.netlify

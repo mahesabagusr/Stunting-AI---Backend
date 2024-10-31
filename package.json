@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"No test specified\""
   },
@@ -24,9 +24,11 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
+    "netlify-lambda": "^2.0.16",
     "nodemailer": "^6.9.14",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "onnxruntime-node": "^1.19.2",
+    "serverless-http": "^3.2.0",
     "store": "^2.0.12",
     "svm-predictor": "^1.0.4"
   }
