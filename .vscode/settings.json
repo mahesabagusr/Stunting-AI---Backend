@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/6e4dba0f-c0ed-4fa2-bf9a-b2bc3547fa8d/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/Stunting-AI-Backend",
+  "appService.deploySubpath": "."
+}
