@@ -1,7 +1,8 @@
-# netlify.toml
 [build]
-  functions = "netlify/functions"
-  command = "npm install && npm run build"
+functions = "netlify/functions"
+publish = "public"
 
-[dev]
-  functions = "netlify/functions"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/express-function"
+  status = 200
