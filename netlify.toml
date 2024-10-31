@@ -1,7 +1,6 @@
 [build]
-  base = "/opt/build/repo"
+  functions = "functions"
   command = "npm install && npm run build"
-  functions = "/opt/build/repo/functions-build"
 
 [dev]
   functions = "functions"
