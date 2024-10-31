@@ -85,3 +85,41 @@ export const updateSiswa = async (req, res) => {
 
   response(await postRequest(validatePayload))
 }
+
+export const getAllHistorySiswa = async (req, res) => {
+  const { authorization } = req.headers
+
+  const { username, email, signature } = decodeToken(authorization)
+
+  const payload = { ...req.body, username, email, signature }
+
+  // const validatePayload = await validator.isValidPayload(
+  //   payload,
+  //   siswaUpdateModel
+  // )
+
+  // if (validatePayload.err) {
+  //   return wrapper.response(res, 'fail', validatePayload, 'Invalid Payload', httpError.BAD_REQUEST);
+  // }
+
+  const postRequest = (payload) => {
+    if (!payload) {
+      return payload
+    }
+    return siswa.updateAndGenerateAI(payload.data)
+  }
+
+  const response = (result) => {
+    result.err
+      ? wrapper.response(
+        res,
+        'fail',
+        result,
+        'Add Siswa Failed',
+        httpError.NOT_FOUND
+      )
+      : wrapper.response(res, 'success', result, 'Siswa Added Successfull', http.OK);
+  }
+
+  response(await postRequest(payload))
+}
