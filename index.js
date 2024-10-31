@@ -22,4 +22,4 @@ app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });
 
-export const handler = serverless(app);
+export default app;
