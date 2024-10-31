@@ -1,7 +1,7 @@
-# netlify.toml
 [build]
-  functions = "functions-build"
+  base = "/opt/build/repo"
   command = "npm install && npm run build"
+  functions = "/opt/build/repo/functions-build"
 
 [dev]
   functions = "functions"
