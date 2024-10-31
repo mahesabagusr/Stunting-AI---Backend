@@ -21,15 +21,15 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "fs": "^0.0.1-security",
-    "http": "^0.0.1-security",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
     "nodemailer": "^6.9.14",
-    "nodemon": "^3.1.7",
     "onnxruntime-node": "^1.19.2",
     "serverless-http": "^3.2.0",
-    "store": "^2.0.12",
     "svm-predictor": "^1.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
