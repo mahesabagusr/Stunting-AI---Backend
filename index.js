@@ -1,7 +1,6 @@
 import express from 'express';
 import router from './src/routes/routes.js'
 import serverless from 'serverless-http'
-
 import { config } from './src/infra/global_config.js';
 
 const app = express();
@@ -23,4 +22,4 @@ app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });
 
-export default serverless(app);
+export const handler = serverless(app);
