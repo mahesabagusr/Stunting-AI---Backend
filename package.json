@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"No test specified\"",
-    "build": "netlify deploy --prod"
+    "build": "echo \"No test specified\""
   },
   "author": "",
   "license": "ISC",
