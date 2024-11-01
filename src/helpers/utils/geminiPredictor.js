@@ -44,7 +44,7 @@ export async function run({ ...input }, history = []) {
   rencana nutrisi per sekali makan yang seimbang, dengan anggaran sebesar Rp${input.budget} per makan. Rencana 
   ini harus mencakup asupan protein, karbohidrat, lemak sehat, vitamin, dan mineral yang diperlukan untuk sekali makan,
   menggunakan bahan makanan yang mudah diakses dan terjangkau. Sertakan juga alternatif bahan makanan untuk setiap kategori
-  agar tetap sesuai kebutuhan gizi dalam anggaran yang tersedia. `
+  agar tetap sesuai kebutuhan gizi dalam anggaran yang tersedia. jika ada, gunakan response kamu sebelumnya sebagai referensi perkembangan anak ke depan `
 
   const result = await chatSession.sendMessage(message);
 

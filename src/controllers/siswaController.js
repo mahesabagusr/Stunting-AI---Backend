@@ -91,22 +91,42 @@ export const getAllHistorySiswa = async (req, res) => {
 
   const { username, email, signature } = decodeToken(authorization)
 
-  const payload = { ...req.body, username, email, signature }
-
-  // const validatePayload = await validator.isValidPayload(
-  //   payload,
-  //   siswaUpdateModel
-  // )
-
-  // if (validatePayload.err) {
-  //   return wrapper.response(res, 'fail', validatePayload, 'Invalid Payload', httpError.BAD_REQUEST);
-  // }
+  const payload = { username, email, signature }
 
   const postRequest = (payload) => {
     if (!payload) {
       return payload
     }
-    return siswa.updateAndGenerateAI(payload.data)
+    return siswa.getAllHistoryByUserId(payload)
+  }
+
+  const response = (result) => {
+    result.err
+      ? wrapper.response(
+        res,
+        'fail',
+        result,
+        'Get History Failed',
+        httpError.NOT_FOUND
+      )
+      : wrapper.response(res, 'success', result, 'Get History Successfull', http.OK);
+  }
+
+  response(await postRequest(payload))
+}
+
+export const getStuntingCount = async (req, res) => {
+  const { authorization } = req.headers
+
+  const { username, signature } = decodeToken(authorization)
+
+  const payload = { username, signature }
+
+  const postRequest = (payload) => {
+    if (!payload) {
+      return payload
+    }
+    return siswa.StuntingCount(payload)
   }
 
   const response = (result) => {

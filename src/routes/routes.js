@@ -1,6 +1,7 @@
 import express from 'express';
 import { userRegister, userLogin } from '../controllers/userController.js';
-import { addSiswa, updateSiswa } from '../controllers/siswaController.js';
+import { addSiswa, getAllHistorySiswa, getStuntingCount, updateSiswa } from '../controllers/siswaController.js';
+import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 
@@ -12,6 +13,9 @@ router.get('/', function (req, res) {
 router.post('/user/register', userRegister);
 router.post('/user/login', userLogin);
 
-router.post('/siswa/add', addSiswa)
-router.post('/siswa/update', updateSiswa);
+router.post('/siswa/add', verifyToken, addSiswa)
+router.post('/siswa/update', verifyToken, updateSiswa);
+router.get('/siswa/stunting/count', verifyToken, getStuntingCount)
+router.get('/siswa/response/history', verifyToken, getAllHistorySiswa)
+
 export default router;
