@@ -15,6 +15,8 @@ export default class Siswa {
       .select('id')
       .eq('username', dataUser.username)
 
+    console.log(id)
+
     if (!id) {
       return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
     }
@@ -36,12 +38,12 @@ export default class Siswa {
       .from('data_anak')
       .insert({
         nik: nik, name: name, height: height, weight: weight, parent: parent,
-        birth_date: birthDate, gender: gender, status_stunting: stuntingStatus, user_id: dataUser.id
+        birth_date: birthDate, gender: gender, status_stunting: stuntingStatus, user_id: id[0].id,
       })
       .select('id')
 
     if (err) {
-      console.error(err)
+      return wrapper.error(new NotFoundError(err))
     }
 
     const { response, prompt } = await run({ name, age, gender, height, weight, stuntingStatus, budget })
@@ -91,12 +93,11 @@ export default class Siswa {
 
     const age = calculateAge(dataAnak.birth_date)
     const stuntingStatus = await predictStuntingAi([age, dataAnak.gender, height, weight])
-    console.log(stuntingStatus)
 
     const { data: historyChat } = await supabase
       .from('prompt')
       .select('prompt,response')
-      .eq('id_anak', 10)
+      .eq('id_anak', dataAnak.id)
 
     const conversation = historyChat ? historyChat.flatMap(item => [
       { role: 'user', content: item.prompt },
@@ -113,7 +114,104 @@ export default class Siswa {
       wrapper.error(new ExpectationFailedError('Prompt Gagal'))
     }
 
-    return wrapper.data({ prompt: prompt, response: response })
+    return wrapper.data({ status: stuntingStatus, prompt: prompt, response: response })
   }
 
+  async getAllHistoryByUserId(payload) {
+    const { username } = payload
+
+    const { data: id } = await supabase
+      .from('users')
+      .select('id')
+      .eq('username', username)
+
+    if (!id) {
+      return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+    }
+
+    console.log(id[0].id)
+
+    const { data: historyChat, error } = await supabase
+      .from('prompt')
+      .select(`
+      prompt, 
+      response, 
+      id, 
+      id_anak(id,user_id)
+    `)
+      .eq('id_anak.user_id', id[0].id);
+
+    // console.log(historyChat)
+
+    if (!historyChat) {
+      return wrapper.error(new NotFoundError('History Tidak Ada'))
+    }
+
+    const historyChatMap = await historyChat.map(item => ({
+      chat_id: item.id,
+      prompt: item.prompt,
+      response: item.response,
+      id_anak: item.id_anak.id,
+      user_id: item.id_anak.user_id,
+    }))
+
+    return wrapper.data(historyChatMap)
+
+  }
+
+  async StuntingCount(payload) {
+    try {
+      const { username, signature } = payload
+
+      const { data: id } = await supabase
+        .from('users')
+        .select('id')
+        .eq('username', username)
+        .eq('signature', signature)
+
+      console.log(id)
+
+      if (!id) {
+        return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+      }
+
+      // Fetch data for 'Stunted' status
+      const { count: notStunted, error: notStuntingError } = await supabase
+        .from('data_anak')
+        .select('status_stunting', { count: 'exact', head: true })
+        .eq('user_id', id[0].id)
+        .eq('status_stunting', "Not Stunted");
+
+      if (notStuntingError) {
+        wrapper.error(new ExpectationFailedError("Error fetching stunted data:", notStuntingError));
+      }
+
+      const { count: stunted, error: stuntingError } = await supabase
+        .from('data_anak')
+        .select('status_stunting', { count: 'exact', head: true })
+        .eq('user_id', id[0].id)
+        .eq('status_stunting', "Stunted")
+
+      if (stuntingError) {
+        wrapper.error(new ExpectationFailedError("Error fetching stunted data:", stuntingError));
+      }
+
+      const { count: severelyStunted, error: SeverelystuntingError } = await supabase
+        .from('data_anak')
+        .select('status_stunting', { count: 'exact', head: true })
+        .eq('user_id', id[0].id)
+        .eq('status_stunting', "severely Stunted")
+
+      if (SeverelystuntingError) {
+        wrapper.error(new ExpectationFailedError("Error fetching stunted data:", stuntingError));
+      }
+
+
+      return wrapper.data({ notStunted: notStunted, stunted: stunted, severelyStunted: severelyStunted })
+
+    } catch (err) {
+      return wrapper.error(new BadRequestError(err.message))
+
+    }
+  }
 }
