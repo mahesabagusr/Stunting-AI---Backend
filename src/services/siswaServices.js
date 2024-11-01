@@ -76,7 +76,6 @@ export default class Siswa {
       .eq('nik', nik)
 
     const dataAnak = rawDataAnak.length > 0 ? rawDataAnak[0] : 0
-    console.log(dataAnak)
 
     if (dataAnak === 0) {
       return wrapper.error(new NotFoundError('NIK belum terdaftar, harap daftar terlebih dahulu'))
@@ -92,6 +91,7 @@ export default class Siswa {
 
     const age = calculateAge(dataAnak.birth_date)
     const stuntingStatus = await predictStuntingAi([age, dataAnak.gender, height, weight])
+    console.log(stuntingStatus)
 
     const { data: historyChat } = await supabase
       .from('prompt')

@@ -24,11 +24,10 @@ const generationConfig = {
 export async function run({ ...input }, history = []) {
 
   const formattedHistory = history.map(item => ({
-    role: item.role, 
-    parts: [{ text: item.content }] 
+    role: item.role,
+    parts: [{ text: item.content }]
   }));
 
-  console.log(formattedHistory);
 
   const chatSession = model.startChat({
     generationConfig,
@@ -39,8 +38,8 @@ export async function run({ ...input }, history = []) {
 
   gender = input.gender ? "Perempuan" : "Laki-laki";
 
-  const message = `Jadilah seorang ahli gizi yang memberikan rekomendasi nutrisi terbaik untuk 
-  anak dengan informasi berikut: saya memiliki anak dengan nama ${input.name} berjenis kelamin ${input.gender}, berstatus ${input.stuntingStatus}, 
+  const message = `Jadilah bot ahli gizi dengan nama "Stunting AI Bot" yang memberikan rekomendasi nutrisi terbaik untuk 
+  anak dengan informasi berikut: saya memiliki anak dengan nama ${input.name} berjenis kelamin ${gender}, berstatus ${input.stuntingStatus}, 
   berusia ${input.age} tahun, dengan tinggi badan ${input.height} cm, dan berat badan ${input.weight} kg. Buatlah 
   rencana nutrisi per sekali makan yang seimbang, dengan anggaran sebesar Rp${input.budget} per makan. Rencana 
   ini harus mencakup asupan protein, karbohidrat, lemak sehat, vitamin, dan mineral yang diperlukan untuk sekali makan,

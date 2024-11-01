@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"No test specified\"",
-    "build": "echo 'No build step necessary'"
+    "build": "netlify deploy --prod"
   },
   "author": "",
   "license": "ISC",
@@ -24,10 +24,11 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
+    "netlify-cli": "^17.37.2",
+    "netlify-lambda": "^2.0.16",
     "nodemailer": "^6.9.14",
     "onnxruntime-node": "^1.19.2",
-    "serverless-http": "^3.2.0",
-    "svm-predictor": "^1.0.4"
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

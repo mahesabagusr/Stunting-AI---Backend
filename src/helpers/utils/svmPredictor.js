@@ -1,15 +1,9 @@
+import * as wrapper from './wrapper.js'
 import ort from 'onnxruntime-node'
+
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { run } from './geminiPredictor.js'
 
-// Convert import.meta.url to a file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Define paths to the model and labels
-const modelPath1 = path.resolve(__dirname, '../../../ai_model/model1.onnx');
-const modelPath2 = path.resolve(__dirname, '../../../ai_model/model2.onnx');
+const modelPath = path.join(process.cwd(), 'ai_model', 'model2.onnx');
 
 // Example usage
 const labelMapping = {
@@ -29,7 +23,7 @@ async function predict(inputData, modelPath) {
 
 export const predictStuntingAi = async (dataArray = []) => {
   try {
-    const result1 = await predict(dataArray, modelPath2);
+    const result1 = await predict(dataArray, modelPath);
     return result1
   } catch (error) {
     wrapper.error('An error occurred:', error.message);
