@@ -118,18 +118,17 @@ export default class Siswa {
   }
 
   async getAllHistoryByUserId(payload) {
-    const { username } = payload
+    const { username, signature } = payload
 
-    const { data: id } = await supabase
+    const { data: user } = await supabase
       .from('users')
-      .select('id')
+      .select('id, signature')
       .eq('username', username)
+      .eq('signature', signature)
 
-    if (!id) {
-      return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+    if (!user[0]) {
+      return wrapper.error(new UnauthorizedError('Token Tidak Valid, Akun telah logout'))
     }
-
-    console.log(id[0].id)
 
     const { data: historyChat, error } = await supabase
       .from('prompt')
@@ -163,16 +162,14 @@ export default class Siswa {
     try {
       const { username, signature } = payload
 
-      const { data: id } = await supabase
+      const { data: user } = await supabase
         .from('users')
-        .select('id')
+        .select('id, signature')
         .eq('username', username)
         .eq('signature', signature)
 
-      console.log(id)
-
-      if (!id) {
-        return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+      if (!user[0]) {
+        return wrapper.error(new UnauthorizedError('Token Tidak Valid, Akun telah logout'))
       }
 
       // Fetch data for 'Stunted' status

@@ -79,7 +79,6 @@ export default class User {
     } catch (err) {
       return wrapper.error(new BadRequestError(`${err.message}`));
     }
-
   }
 
   async logout(payload) {
