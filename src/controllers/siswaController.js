@@ -115,6 +115,65 @@ export const getAllHistorySiswa = async (req, res) => {
   response(await postRequest(payload))
 }
 
+export const getAllSiswa = async (req, res) => {
+  const { authorization } = req.headers
+
+  const { username, email, signature } = decodeToken(authorization)
+
+  const payload = { username, email, signature }
+
+  const postRequest = (payload) => {
+    if (!payload) {
+      return payload
+    }
+    return siswa.getAllSiswa(payload)
+  }
+
+  const response = (result) => {
+    result.err
+      ? wrapper.response(
+        res,
+        'fail',
+        result,
+        'Get History Failed',
+        httpError.NOT_FOUND
+      )
+      : wrapper.response(res, 'success', result, 'Get History Successfull', http.OK);
+  }
+
+  response(await postRequest(payload))
+}
+
+export const getSiswaById = async (req, res) => {
+  const { authorization } = req.headers
+  const { idAnak } = req.params
+
+  const { username, email, signature } = decodeToken(authorization)
+
+  const payload = { username, email, signature, idAnak }
+
+  const postRequest = (payload) => {
+    if (!payload) {
+      return payload
+    }
+    return siswa.getSiswaById(payload)
+  }
+
+  const response = (result) => {
+    result.err
+      ? wrapper.response(
+        res,
+        'fail',
+        result,
+        'Get History Failed',
+        httpError.NOT_FOUND
+      )
+      : wrapper.response(res, 'success', result, 'Get History Successfull', http.OK);
+  }
+
+  response(await postRequest(payload))
+}
+
 export const getStuntingCount = async (req, res) => {
   const { authorization } = req.headers
 
