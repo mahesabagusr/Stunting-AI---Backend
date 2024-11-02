@@ -10,15 +10,14 @@ export default class Siswa {
   async addAndGenerateAi(payload) {
     const { nik, name, height, weight, parent, birthDate, gender, budget, ...dataUser } = payload
 
-    const { data: id } = await supabase
+    const { data: user } = await supabase
       .from('users')
-      .select('id')
+      .select('id, signature')
       .eq('username', dataUser.username)
+      .eq('signature', dataUser.signature)
 
-    console.log(id)
-
-    if (!id) {
-      return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+    if (!user[0]) {
+      return wrapper.error(new UnauthorizedError('Token Tidak Valid, Akun telah logout'))
     }
 
     const { data: dataNik } = await supabase
@@ -63,13 +62,14 @@ export default class Siswa {
   async updateAndGenerateAI(payload) {
     const { nik, name, height, weight, budget, ...dataUser } = payload
 
-    const { data: id } = await supabase
+    const { data: user } = await supabase
       .from('users')
-      .select('id')
+      .select('id, signature')
       .eq('username', dataUser.username)
+      .eq('signature', dataUser.signature)
 
-    if (!id) {
-      return wrapper.error(new NotFoundError('ID Tidak ditemukan'))
+    if (!user[0]) {
+      return wrapper.error(new UnauthorizedError('Token Tidak Valid, Akun telah logout'))
     }
 
     const { data: rawDataAnak } = await supabase
@@ -206,12 +206,10 @@ export default class Siswa {
         wrapper.error(new ExpectationFailedError("Error fetching stunted data:", stuntingError));
       }
 
-
       return wrapper.data({ notStunted: notStunted, stunted: stunted, severelyStunted: severelyStunted })
 
     } catch (err) {
       return wrapper.error(new BadRequestError(err.message))
-
     }
   }
 }

@@ -6,6 +6,7 @@ import {
 import validator from '../helpers/utils/validator.js'
 import { registerModel, loginModel } from '../models/userModels.js'
 import User from '../services/userServices.js';
+import { decodeToken } from '../middlewares/jwt.js';
 const user = new User()
 
 export const userRegister = async (req, res) => {
@@ -75,4 +76,34 @@ export const userLogin = async (req, res) => {
   }
 
   response(await postRequest(validatePayload))
+}
+
+export const userLogout = async (req, res) => {
+  const { authorization } = req.headers
+
+  const { username, signature } = decodeToken(authorization)
+
+  const payload = { username, signature }
+
+  const postRequest = async (payload) => {
+    if (!payload) {
+      return payload
+    }
+    return await user.logout(payload)
+  }
+
+  const response = (result) => {
+    result.err
+      ? wrapper.response(
+        res,
+        'fail',
+        result,
+        'User Logout Failed',
+        httpError.NOT_FOUND
+      )
+      : wrapper.response(res, 'success', result, 'User Logout Successfull', http.OK);
+  }
+
+  response(await postRequest(payload))
+
 }

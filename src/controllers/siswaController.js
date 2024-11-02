@@ -77,10 +77,10 @@ export const updateSiswa = async (req, res) => {
         res,
         'fail',
         result,
-        'Add Siswa Failed',
+        'Update Siswa Failed',
         httpError.NOT_FOUND
       )
-      : wrapper.response(res, 'success', result, 'Siswa Added Successfull', http.OK);
+      : wrapper.response(res, 'success', result, 'Siswa Update Successfull', http.OK);
   }
 
   response(await postRequest(validatePayload))
@@ -135,10 +135,10 @@ export const getStuntingCount = async (req, res) => {
         res,
         'fail',
         result,
-        'Add Siswa Failed',
+        'Get Stunting Count Failed',
         httpError.NOT_FOUND
       )
-      : wrapper.response(res, 'success', result, 'Siswa Added Successfull', http.OK);
+      : wrapper.response(res, 'success', result, 'Get Stunting Count Successfull', http.OK);
   }
 
   response(await postRequest(payload))

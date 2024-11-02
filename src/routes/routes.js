@@ -1,5 +1,5 @@
 import express from 'express';
-import { userRegister, userLogin } from '../controllers/userController.js';
+import { userRegister, userLogin, userLogout } from '../controllers/userController.js';
 import { addSiswa, getAllHistorySiswa, getStuntingCount, updateSiswa } from '../controllers/siswaController.js';
 import { verifyToken } from '../middlewares/jwt.js';
 
@@ -12,6 +12,7 @@ router.get('/', function (req, res) {
 
 router.post('/user/register', userRegister);
 router.post('/user/login', userLogin);
+router.put('/user/logout', userLogout);
 
 router.post('/siswa/add', verifyToken, addSiswa)
 router.post('/siswa/update', verifyToken, updateSiswa);

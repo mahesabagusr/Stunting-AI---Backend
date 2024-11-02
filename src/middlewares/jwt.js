@@ -33,10 +33,8 @@ export const createRefreshToken = (data) => {
 }
 
 export const decodeToken = (data) => {
-
   const token = data.split(' ')[1];
   const decode = jwt.verify(token, privateKey);
-
   return decode
 
 }
