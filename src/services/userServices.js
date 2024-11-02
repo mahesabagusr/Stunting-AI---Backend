@@ -77,8 +77,35 @@ export default class User {
       return wrapper.data({ token: accessToken })
 
     } catch (err) {
-
+      return wrapper.error(new BadRequestError(`${err.message}`));
     }
 
+  }
+
+  async logout(payload) {
+    const { username, signature } = payload
+
+    const newSignature = nanoid(5)
+
+    const { data: user } = await supabase
+      .from('users')
+      .select('*')
+      .eq(`username`, username)
+      .eq(`signature`, signature)
+
+    if (!user[0]) {
+      return wrapper.error(new BadRequestError('Akun Telah Logout atau token sudah tidak valid'))
+    }
+
+    const { data: update, error: updateError } = await supabase
+      .from('users')
+      .update({ signature: newSignature })
+      .eq(`username`, username)
+
+    if (updateError) {
+      new BadRequestError(`error : ${updateError}`)
+    }
+
+    return wrapper.data("Logout Berhasil")
   }
 }
